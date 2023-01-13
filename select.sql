@@ -11,8 +11,8 @@ SELECT a.name, AVG(duration) FROM tracks t
 LEFT JOIN albums a ON a.id = t.album_id 
 GROUP BY a.name
 
---4
-SELECT COUNT(a.name) FROM artist_album aa 
+--4(исправлено)
+SELECT a.name FROM artist_album aa 
 LEFT JOIN artists a ON a.id = aa.artist_id
 LEFT JOIN albums a2 ON a2.id = aa.album_id 
 WHERE a2.year NOT IN (2020)
@@ -46,7 +46,8 @@ LEFT JOIN albums a2 ON aa.album_id = a2.id
 LEFT JOIN tracks t ON t.album_id = a2.id
 WHERE t.duration = (SELECT MIN(duration) FROM tracks)
 
---9
+--9(исправлено)
 SELECT a.name, COUNT(t.name)  FROM tracks t
 LEFT JOIN albums a ON t.album_id = a.id 
 GROUP BY a.name 
+LIMIT 1
