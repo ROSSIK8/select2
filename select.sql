@@ -12,10 +12,11 @@ LEFT JOIN albums a ON a.id = t.album_id
 GROUP BY a.name
 
 --4(исправлено)
-SELECT a.name FROM artist_album aa 
-LEFT JOIN artists a ON a.id = aa.artist_id
-LEFT JOIN albums a2 ON a2.id = aa.album_id 
-WHERE a2.year NOT IN (2020)
+SELECT name FROM artists
+WHERE name NOT IN (SELECT a.name FROM artist_album aa 
+				   LEFT JOIN artists a ON a.id = aa.artist_id
+  				   LEFT JOIN albums a2 ON a2.id = aa.album_id 
+				   WHERE a2.year IN (2020))
 
 --5
 SELECT c.name, a2.name FROM tracks_collection tc 
@@ -50,4 +51,6 @@ WHERE t.duration = (SELECT MIN(duration) FROM tracks)
 SELECT a.name, COUNT(t.name)  FROM tracks t
 LEFT JOIN albums a ON t.album_id = a.id 
 GROUP BY a.name 
-LIMIT 1
+HAVING COUNT(t.name) = (SELECT MIN(count) FROM (SELECT a2.name, COUNT(t2.name)  FROM tracks t2
+											    LEFT JOIN albums a2 ON t2.album_id = a2.id 
+											    GROUP BY a2.name ) aaaa)
